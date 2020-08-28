@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:logapp/log_printer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,13 +20,19 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Log App'),
+      navigatorObservers: <NavigatorObserver>[observer],
+      home: MyHomePage(
+          title: 'Log App', analytics: analytics, observer: observer),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
+  MyHomePage({Key key, this.title, this.analytics, this.observer})
+      : super(key: key);
 
   final String title;
 
@@ -36,16 +47,34 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      logger.v('You don\'t always want to see all of these');
-      logger.d('Logs a debug message');
-      logger.i('Public Function called');
-      logger.w('This might become a problem');
-      logger.e('Something has happened');
     });
+    logger.v('You don\'t always want to see all of these');
+    logger.d('Logs a debug message');
+    logger.i('Public Function called');
+    logger.w('This might become a problem');
+    logger.e('Something has happened');
+    _sendAnalytics();
+  }
+
+  Future<Null> _sendAnalytics() async {
+    await widget.analytics
+        .logEvent(name: "tap_to_plus", parameters: <String, dynamic>{
+      'string': 'string',
+      'int': 42,
+      'long': 12345678910,
+      'double': 42.0,
+      'bool': true,
+    });
+  }
+
+  Future<Null> _currentScreen() async {
+    await widget.analytics.setCurrentScreen(
+        screenName: "homescreen", screenClassOverride: "Main");
   }
 
   @override
   Widget build(BuildContext context) {
+    _currentScreen();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
