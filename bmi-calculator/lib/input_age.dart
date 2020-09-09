@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bmi_calculator/icon_content.dart';
+import 'package:bmi_calculator/reusable_card.dart';
+
+const bottomContainerHeight = 80.0;
+const normalCardColor = Color(0xFF1D11E3);
+const activeCardColor = Color(0x771D11E3);
+const bottomColor = Color(0xFF1D8285);
 
 class InputPage extends StatefulWidget {
   @override
@@ -6,6 +14,36 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+  Color maleCardColor = normalCardColor;
+  Color femaleCardColor = normalCardColor;
+
+  void updateColor(int gender) {
+    //male card pressed
+    if (gender == 1) {
+      if (maleCardColor == normalCardColor)
+        setState(() {
+          maleCardColor = activeCardColor;
+          femaleCardColor = normalCardColor;
+        });
+      else
+        setState(() {
+          maleCardColor = normalCardColor;
+        });
+    }
+    //female card pressed
+    if (gender == 2) {
+      if (femaleCardColor == normalCardColor)
+        setState(() {
+          femaleCardColor = activeCardColor;
+          maleCardColor = normalCardColor;
+        });
+      else
+        setState(() {
+          femaleCardColor = normalCardColor;
+        });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,38 +51,67 @@ class _InputPageState extends State<InputPage> {
         title: Text('BMI CALCULATOR'),
       ),
       body: Column(
-        children: <Widget>[
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
           Expanded(
             child: Row(
               children: [
-                Container(
-                  child: Column(),
-                  margin: EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF1D1E33),
-                    borderRadius: BorderRadius.circular(10.0),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      print("male");
+                      updateColor(1);
+                    },
+                    child: ReusableCard(
+                        colour: maleCardColor,
+                        cardChild: IconWidget(
+                          label: 'Male',
+                          icon: FontAwesomeIcons.mars,
+                        )),
                   ),
                 ),
-                Container(
-                  child: Column(),
-                  margin: EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF1D1E33),
-                    borderRadius: BorderRadius.circular(10.0),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      print("female");
+                      updateColor(2);
+                    },
+                    child: ReusableCard(
+                        colour: femaleCardColor,
+                        cardChild: IconWidget(
+                          label: 'Female',
+                          icon: FontAwesomeIcons.venus,
+                        )),
                   ),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: Container(
-              child: Column(),
-              margin: EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                color: Color(0xFF1D1E33),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
+            child: ReusableCard(
+              colour: normalCardColor,
             ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: ReusableCard(
+                    colour: normalCardColor,
+                  ),
+                ),
+                Expanded(
+                  child: ReusableCard(
+                    colour: normalCardColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            color: bottomColor,
+            margin: EdgeInsets.only(top: 15),
+            height: bottomContainerHeight,
           ),
         ],
       ),
