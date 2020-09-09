@@ -7,6 +7,7 @@ const bottomContainerHeight = 80.0;
 const normalCardColor = Color(0xFF1D11E3);
 const activeCardColor = Color(0x771D11E3);
 const bottomColor = Color(0xFF1D8285);
+enum Gender { male, female }
 
 class InputPage extends StatefulWidget {
   @override
@@ -14,35 +15,37 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
-  Color maleCardColor = normalCardColor;
-  Color femaleCardColor = normalCardColor;
+  // Color maleCardColor = normalCardColor;
+  // Color femaleCardColor = normalCardColor;
 
-  void updateColor(int gender) {
-    //male card pressed
-    if (gender == 1) {
-      if (maleCardColor == normalCardColor)
-        setState(() {
-          maleCardColor = activeCardColor;
-          femaleCardColor = normalCardColor;
-        });
-      else
-        setState(() {
-          maleCardColor = normalCardColor;
-        });
-    }
-    //female card pressed
-    if (gender == 2) {
-      if (femaleCardColor == normalCardColor)
-        setState(() {
-          femaleCardColor = activeCardColor;
-          maleCardColor = normalCardColor;
-        });
-      else
-        setState(() {
-          femaleCardColor = normalCardColor;
-        });
-    }
-  }
+  // void updateColor(Gender gender) {
+  //   //male card pressed
+  //   if (gender == Gender.male) {
+  //     if (maleCardColor == normalCardColor)
+  //       setState(() {
+  //         maleCardColor = activeCardColor;
+  //         femaleCardColor = normalCardColor;
+  //       });
+  //     else
+  //       setState(() {
+  //         maleCardColor = normalCardColor;
+  //       });
+  //   }
+  //   //female card pressed
+  //   if (gender == Gender.female) {
+  //     if (femaleCardColor == normalCardColor)
+  //       setState(() {
+  //         femaleCardColor = activeCardColor;
+  //         maleCardColor = normalCardColor;
+  //       });
+  //     else
+  //       setState(() {
+  //         femaleCardColor = normalCardColor;
+  //       });
+  //   }
+  // }
+
+  Gender selectedGender;
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +63,15 @@ class _InputPageState extends State<InputPage> {
                   child: GestureDetector(
                     onTap: () {
                       print("male");
-                      updateColor(1);
+                      // updateColor(Gender.male);
+                      setState(() {
+                        selectedGender = Gender.male;
+                      });
                     },
                     child: ReusableCard(
-                        colour: maleCardColor,
+                        colour: selectedGender == Gender.male
+                            ? activeCardColor
+                            : normalCardColor,
                         cardChild: IconWidget(
                           label: 'Male',
                           icon: FontAwesomeIcons.mars,
@@ -74,10 +82,15 @@ class _InputPageState extends State<InputPage> {
                   child: GestureDetector(
                     onTap: () {
                       print("female");
-                      updateColor(2);
+                      // updateColor(Gender.female);
+                      setState(() {
+                        selectedGender = Gender.female;
+                      });
                     },
                     child: ReusableCard(
-                        colour: femaleCardColor,
+                        colour: selectedGender == Gender.female
+                            ? activeCardColor
+                            : normalCardColor,
                         cardChild: IconWidget(
                           label: 'Female',
                           icon: FontAwesomeIcons.venus,
