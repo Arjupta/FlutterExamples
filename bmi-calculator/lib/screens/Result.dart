@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'constants.dart';
-import 'reusable_card.dart';
+import '../common/constants.dart';
+import '../components/reusable_card.dart';
+import '../components/bottom_button.dart';
 
 class Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('BMI Calculator'),
+      ),
       body: Container(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             flex: 1,
@@ -25,16 +28,31 @@ class Result extends StatelessWidget {
               colour: kActiveCardColor,
               cardChild: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Result",
                     style: kResultTextStyle,
-                  )
+                  ),
+                  Text(
+                    "18.9",
+                    style: kBMITextStyle,
+                  ),
+                  Text(
+                    "Your Result is low jdksjdkddjwldkjdlkwjojfwjwokd",
+                    textAlign: TextAlign.center,
+                    style: kBodyTextStyle,
+                  ),
                 ],
               ),
             ),
-          )
+          ),
+          BottomButton(
+            onPress: () {
+              Navigator.pop(context);
+            },
+            title: "RE-CALCULATE",
+          ),
         ],
       )),
     );
