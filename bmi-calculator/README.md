@@ -1,6 +1,6 @@
 # BMI Calculator 💪
 
-## what is it
+## What is it
 
 The objective of this project is to create some beautiful designs from scratch while creatig a BMI(body mass index) calculating App.
 
