@@ -1,12 +1,80 @@
 import 'package:flutter/material.dart';
 import 'constants.dart';
+import 'taskmodel.dart';
 
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData.dark(),
-    home: MyApp(),
+    home: ReorderableApp(),
   ));
+}
+
+class ReorderableApp extends StatefulWidget {
+  @override
+  _ReorderableAppState createState() => _ReorderableAppState();
+}
+
+class _ReorderableAppState extends State<ReorderableApp> {
+  List<TaskModel> list = [
+    TaskModel(id: '1', title: 'Test 1', status: 'Employee', name: 'John'),
+    TaskModel(id: '2', title: 'Test 2', status: 'Manager', name: 'Doe'),
+    TaskModel(id: '3', title: 'Test 3', status: 'Customer', name: 'Foo'),
+    TaskModel(id: '4', title: 'Test 4', status: 'Engineer', name: 'Bar'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Reorderble List'),
+      ),
+      body: taskList(),
+    );
+  }
+
+  Widget taskList() {
+    return ReorderableListView(
+      children: list.map((todo) => taskWidget(todo)).toList(),
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          final TaskModel item = list.removeAt(oldIndex);
+          list.insert(newIndex, item);
+        });
+      },
+    );
+  }
+
+  Widget taskWidget(TaskModel todo) {
+    return Container(
+      key: Key(todo.id),
+      margin: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: const Color(0xFF66BB6A),
+          boxShadow: [BoxShadow(blurRadius: 5.0)]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(todo.title),
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ownerNameWidget(todo),
+                statusWidget(todo),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
