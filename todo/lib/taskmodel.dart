@@ -4,66 +4,62 @@ import 'package:flutter/material.dart';
 class TaskModel {
   String id;
   String title;
-  String status;
-  String name;
+  bool done;
 
-  TaskModel(
-      {@required this.id,
-      @required this.title,
-      @required this.status,
-      @required this.name});
+  TaskModel({@required this.id, @required this.title, @required this.done});
+
+  setData(bool check) {
+    this.done = check;
+  }
+
+  bool compareObject(TaskModel model) {
+    if (this.id != model.id)
+      return false;
+    else if (this.title != model.title)
+      return false;
+    else if (this.done != model.done)
+      return false;
+    else
+      return true;
+    // else if(model1.name != model2.name)
+    // return false;
+  }
 }
 
-Widget ownerNameWidget(TaskModel todo) {
-  return Expanded(
-    child: Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 5.0),
-            child: Text(
-              'Owner',
-              style: TextStyle(fontSize: 17.07, color: Colors.black12),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 5.0),
-            child: Text(
-              todo.name,
-              style: TextStyle(fontSize: 17.07),
-            ),
-          )
-        ],
-      ),
+Widget taskWidget(TaskModel todo, status()) {
+  return Container(
+    key: Key(todo.id),
+    margin: EdgeInsets.all(10.0),
+    padding: EdgeInsets.all(10.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      shape: BoxShape.rectangle,
+      color: Colors.lightGreen,
+      boxShadow: [BoxShadow(blurRadius: 5.0)],
     ),
-  );
-}
-
-Widget statusWidget(TaskModel todo) {
-  return Expanded(
-    child: Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 5.0),
-            child: Text(
-              'Owner',
-              style: TextStyle(fontSize: 17.07, color: Colors.black12),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 5.0),
-            child: Text(
-              todo.status,
-              style: TextStyle(fontSize: 17.07),
-            ),
-          )
-        ],
-      ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Checkbox(
+                  value: todo.done,
+                  onChanged: (val) => status(),
+                  activeColor: Colors.lightGreenAccent,
+                )),
+            Padding(
+              padding: EdgeInsets.only(bottom: 5.0),
+              child: Text(
+                todo.title,
+                style: TextStyle(fontSize: 17.07),
+              ),
+            )
+          ],
+        ),
+      ],
     ),
   );
 }
