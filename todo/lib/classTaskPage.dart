@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'constants.dart';
+import 'constants.dart';
+import 'constants.dart';
 import 'taskmodel.dart';
 
 class ClassTaskPage extends StatefulWidget {
@@ -34,9 +37,10 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text('${widget.className}'),
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: backgroundColor,
       ),
       body: taskList(),
     );
@@ -59,20 +63,22 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
   }
 
   Widget taskList() {
-    return ReorderableListView(
-      children: list
-          .map((todo) => taskWidget(todo, () {
-                setState(() {
-                  todo.setData(!todo.done);
-                });
-              }))
-          .toList(),
-      onReorder: (oldIndex, newIndex) {
-        setState(() {
-          final TaskModel item = list.removeAt(oldIndex);
-          list.insert(newIndex, item);
-        });
-      },
-    );
+    return Theme(
+        data: ThemeData(canvasColor: backgroundColor),
+        child: ReorderableListView(
+          children: list
+              .map((todo) => taskWidget(todo, () {
+                    setState(() {
+                      todo.setData(!todo.done);
+                    });
+                  }))
+              .toList(),
+          onReorder: (oldIndex, newIndex) {
+            setState(() {
+              final TaskModel item = list.removeAt(oldIndex);
+              list.insert(newIndex, item);
+            });
+          },
+        ));
   }
 }

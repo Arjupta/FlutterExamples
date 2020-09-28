@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'constants.dart';
 import 'taskmodel.dart';
 import 'classModel.dart';
 
@@ -21,7 +22,7 @@ class ClassPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColor,
         appBar: AppBar(
           title: Text("Classes"),
           backgroundColor: Colors.greenAccent,
