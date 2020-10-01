@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo/constants.dart';
+import 'package:todo/edit_text.dart';
 
 class TaskModel {
   String id;
@@ -29,7 +31,7 @@ class TaskModel {
 Widget taskWidget(TaskModel todo, status()) {
   return Container(
     key: Key(todo.id),
-    margin: EdgeInsets.all(10.0),
+    margin: EdgeInsets.symmetric(vertical: 10.0),
     padding: EdgeInsets.all(10.0),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -39,13 +41,11 @@ Widget taskWidget(TaskModel todo, status()) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisSize: MainAxisSize.max,
           children: [
             IconButton(
               icon: Icon(Icons.drag_handle),
               onPressed: () {},
-            ),
-            SizedBox(
-              width: 10.0,
             ),
             Checkbox(
               value: todo.done,
@@ -55,9 +55,9 @@ Widget taskWidget(TaskModel todo, status()) {
             SizedBox(
               width: 10.0,
             ),
-            Text(
-              todo.title,
-              style: TextStyle(fontSize: 18),
+            Expanded(
+              child: editTextBox(
+                  TextEditingController(text: "${todo.title}"), checkstyle),
             ),
           ],
         ),

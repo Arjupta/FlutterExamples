@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
-import 'constants.dart';
+import 'package:todo/edit_text.dart';
 import 'constants.dart';
 import 'taskmodel.dart';
 
@@ -40,9 +39,22 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text('${widget.className}'),
-        backgroundColor: backgroundColor,
+        backgroundColor: gradientEnd,
       ),
-      body: taskList(),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 18.0, left: 18.0),
+        child: Column(
+          children: [
+            // Text("${widget.className} description text will be here"),
+            editTextBox(
+                TextEditingController(text: "${widget.className} description"),
+                descstyle),
+            Expanded(
+              child: taskList(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

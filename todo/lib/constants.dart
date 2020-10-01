@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 const kAppBarStyle = TextStyle(fontWeight: FontWeight.w500, fontSize: 20.0);
+TextStyle checkstyle = TextStyle(fontSize: 18.0, color: Colors.blueGrey);
+TextStyle descstyle = TextStyle(fontSize: 20.0, color: Colors.black);
+
 Color backgroundColor = Color(0xfff4f6ff); //e0e5ec//ddf3f5//e4e4e4
 
 Color primaryColor = Color(0xff1d797e);
