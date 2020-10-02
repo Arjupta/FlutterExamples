@@ -1,38 +1,41 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:todo/classModel.dart';
 import 'package:todo/edit_text.dart';
 import 'constants.dart';
 import 'taskmodel.dart';
 
 class ClassTaskPage extends StatefulWidget {
-  final int id;
-  final String className;
-  ClassTaskPage({@required this.id, @required this.className});
+  final ClassModel todo;
+
+  ClassTaskPage({this.todo});
+
   @override
   _ClassTaskPageState createState() => _ClassTaskPageState();
 }
 
 class _ClassTaskPageState extends State<ClassTaskPage> {
-  List<TaskModel> list, listcpy;
-  TextEditingController _desc;
+  String classCode;
+  String className;
+  String classDesc;
+  List<TaskModel> list;
+  List<TaskModel> listcpy;
+  TextEditingController _descController;
 
   @override
   void initState() {
     super.initState();
-    _desc = TextEditingController(text: "${widget.className} description");
+    classCode = widget.todo.classCode;
+    className = widget.todo.className;
+    classDesc = widget.todo.classDesc;
     list = [
-      TaskModel(id: '1', title: '${widget.className} 1', done: true),
-      TaskModel(id: '2', title: '${widget.className} 2', done: false),
-      TaskModel(id: '3', title: '${widget.className} 3', done: false),
-      TaskModel(id: '4', title: '${widget.className} 4', done: false),
+      TaskModel(id: '1', text: '$className 1', done: true),
+      TaskModel(id: '2', text: '$className 2', done: false),
+      TaskModel(id: '3', text: '$className 3', done: false),
+      TaskModel(id: '4', text: '$className 4', done: false),
     ];
-    listcpy = [
-      TaskModel(id: '1', title: '${widget.className} 1', done: true),
-      TaskModel(id: '2', title: '${widget.className} 2', done: false),
-      TaskModel(id: '3', title: '${widget.className} 3', done: false),
-      TaskModel(id: '4', title: '${widget.className} 4', done: false),
-    ];
-    // list.addAll(listcpy);
+    listcpy = List.from(list);
+    _descController = TextEditingController(text: classDesc);
   }
 
   @override
@@ -40,7 +43,7 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text('${widget.className}'),
+        title: Text('$className'),
         backgroundColor: gradientEnd,
       ),
       body: Padding(
@@ -48,7 +51,7 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
         child: Column(
           children: [
             // Text("${widget.className} description text will be here"),
-            editTextBox(_desc, descstyle),
+            editTextBox(_descController, descstyle),
             Expanded(
               child: taskList(),
             ),
@@ -60,52 +63,52 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
 
   @override
   void dispose() {
-    // bool toUpdate = false;
+    bool toUpdate = false;
     // list.forEach((element) {
     //   int index = list.indexOf(element);
     //   if (element.compareObject(listcpy.elementAt(index))) toUpdate = true;
     // });
-    print(listEquals(list, listcpy));
 
-    // if (toUpdate)
-    //   print(true);
-    // else
-    //   print(false);
-    _desc.text;
-    // list.map((todo) => todo.updateData());
+    if (classDesc != _descController.text) {
+      widget.todo.classDesc = _descController.text;
+      toUpdate = true;
+    } else if (!listEquals(list, listcpy)) {
+      toUpdate = true;
+    }
+    print(toUpdate);
+
     super.dispose();
   }
 
   Widget taskList() {
     return Theme(
-        data: ThemeData(canvasColor: backgroundColor),
-        child: ReorderableListView(
-          children: list
-              .map((todo) => taskWidget(todo, () {
-                    setState(() {
-                      todo.setData(!todo.done);
-                    });
-                  }))
-              .toList(),
-          onReorder: (oldIndex, newIndex) {
-            setState(() {
-              // final TaskModel item = list.removeAt(oldIndex);
-              print("Index $oldIndex, $newIndex");
-              TaskModel old = list[oldIndex];
-              if (oldIndex > newIndex) {
-                for (int i = oldIndex; i > newIndex; i--) {
-                  list[i] = list[i - 1];
-                }
-                list[newIndex] = old;
-              } else {
-                for (int i = oldIndex; i < newIndex - 1; i++) {
-                  list[i] = list[i + 1];
-                }
-                list[newIndex - 1] = old;
+      data: ThemeData(canvasColor: backgroundColor),
+      child: ReorderableListView(
+        children: list
+            .map((todo) => taskWidget(todo, () {
+                  setState(() {
+                    todo.setData(!todo.done);
+                  });
+                }))
+            .toList(),
+        onReorder: (oldIndex, newIndex) {
+          setState(() {
+            print("Index $oldIndex, $newIndex");
+            TaskModel old = list[oldIndex];
+            if (oldIndex > newIndex) {
+              for (int i = oldIndex; i > newIndex; i--) {
+                list[i] = list[i - 1];
               }
-              // list.insert(newIndex, item);
-            });
-          },
-        ));
+              list[newIndex] = old;
+            } else {
+              for (int i = oldIndex; i < newIndex - 1; i++) {
+                list[i] = list[i + 1];
+              }
+              list[newIndex - 1] = old;
+            }
+          });
+        },
+      ),
+    );
   }
 }

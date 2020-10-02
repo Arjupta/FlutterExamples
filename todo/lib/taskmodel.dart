@@ -5,10 +5,10 @@ import 'package:todo/edit_text.dart';
 
 class TaskModel {
   String id;
-  String title;
+  String text;
   bool done;
 
-  TaskModel({@required this.id, @required this.title, @required this.done});
+  TaskModel({@required this.id, @required this.text, @required this.done});
 
   setData(bool check) {
     this.done = check;
@@ -21,7 +21,7 @@ class TaskModel {
   bool compareObject(TaskModel model) {
     if (this.id != model.id)
       return false;
-    else if (this.title != model.title)
+    else if (this.text != model.text)
       return false;
     else if (this.done != model.done)
       return false;
@@ -61,7 +61,7 @@ Widget taskWidget(TaskModel todo, status()) {
             ),
             Expanded(
               child: editTextBox(
-                  TextEditingController(text: "${todo.title}"), checkstyle),
+                  TextEditingController(text: "${todo.text}"), checkstyle),
             ),
           ],
         ),
