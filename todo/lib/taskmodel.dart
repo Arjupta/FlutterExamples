@@ -10,12 +10,12 @@ class TaskModel {
 
   TaskModel({@required this.id, @required this.text, @required this.done});
 
-  setData(bool check) {
+  setBool(bool check) {
     this.done = check;
   }
 
-  updateData() {
-    // this.title = _controller.text;
+  setText(String text) {
+    this.text = text;
   }
 
   bool compareObject(TaskModel model) {
@@ -33,6 +33,11 @@ class TaskModel {
 }
 
 Widget taskWidget(TaskModel todo, status()) {
+  TextEditingController _controller =
+      TextEditingController(text: "${todo.text}");
+  _controller.addListener(() {
+    todo.setText(_controller.text);
+  });
   return Container(
     key: Key(todo.id),
     margin: EdgeInsets.symmetric(vertical: 10.0),
@@ -60,8 +65,7 @@ Widget taskWidget(TaskModel todo, status()) {
               width: 10.0,
             ),
             Expanded(
-              child: editTextBox(
-                  TextEditingController(text: "${todo.text}"), checkstyle),
+              child: editTextBox(_controller, checkstyle),
             ),
           ],
         ),

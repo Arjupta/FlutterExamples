@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/classModel.dart';
 import 'package:todo/edit_text.dart';
+import 'package:collection/collection.dart';
 import 'constants.dart';
 import 'taskmodel.dart';
 
@@ -21,6 +22,7 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
   List<TaskModel> list;
   List<TaskModel> listcpy;
   TextEditingController _descController;
+  Function isEqual = const DeepCollectionEquality().equals;
 
   @override
   void initState() {
@@ -68,11 +70,10 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
     //   int index = list.indexOf(element);
     //   if (element.compareObject(listcpy.elementAt(index))) toUpdate = true;
     // });
-
     if (classDesc != _descController.text) {
       widget.todo.classDesc = _descController.text;
       toUpdate = true;
-    } else if (!listEquals(list, listcpy)) {
+    } else if (!isEqual(list, listcpy)) {
       toUpdate = true;
     }
     print(toUpdate);
@@ -87,7 +88,7 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
         children: list
             .map((todo) => taskWidget(todo, () {
                   setState(() {
-                    todo.setData(!todo.done);
+                    todo.setBool(!todo.done);
                   });
                 }))
             .toList(),
