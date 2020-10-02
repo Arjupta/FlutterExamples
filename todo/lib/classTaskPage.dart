@@ -14,10 +14,12 @@ class ClassTaskPage extends StatefulWidget {
 
 class _ClassTaskPageState extends State<ClassTaskPage> {
   List<TaskModel> list, listcpy;
+  TextEditingController _desc;
 
   @override
   void initState() {
     super.initState();
+    _desc = TextEditingController(text: "${widget.className} description");
     list = [
       TaskModel(id: '1', title: '${widget.className} 1', done: true),
       TaskModel(id: '2', title: '${widget.className} 2', done: false),
@@ -46,9 +48,7 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
         child: Column(
           children: [
             // Text("${widget.className} description text will be here"),
-            editTextBox(
-                TextEditingController(text: "${widget.className} description"),
-                descstyle),
+            editTextBox(_desc, descstyle),
             Expanded(
               child: taskList(),
             ),
@@ -71,6 +71,8 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
     //   print(true);
     // else
     //   print(false);
+    _desc.text;
+    // list.map((todo) => todo.updateData());
     super.dispose();
   }
 
@@ -87,8 +89,21 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
               .toList(),
           onReorder: (oldIndex, newIndex) {
             setState(() {
-              final TaskModel item = list.removeAt(oldIndex);
-              list.insert(newIndex, item);
+              // final TaskModel item = list.removeAt(oldIndex);
+              print("Index $oldIndex, $newIndex");
+              TaskModel old = list[oldIndex];
+              if (oldIndex > newIndex) {
+                for (int i = oldIndex; i > newIndex; i--) {
+                  list[i] = list[i - 1];
+                }
+                list[newIndex] = old;
+              } else {
+                for (int i = oldIndex; i < newIndex - 1; i++) {
+                  list[i] = list[i + 1];
+                }
+                list[newIndex - 1] = old;
+              }
+              // list.insert(newIndex, item);
             });
           },
         ));

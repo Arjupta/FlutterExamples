@@ -14,6 +14,10 @@ class TaskModel {
     this.done = check;
   }
 
+  updateData() {
+    // this.title = _controller.text;
+  }
+
   bool compareObject(TaskModel model) {
     if (this.id != model.id)
       return false;
