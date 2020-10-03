@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/classModel.dart';
 import 'package:todo/edit_text.dart';
@@ -8,7 +7,6 @@ import 'taskmodel.dart';
 
 class ClassTaskPage extends StatefulWidget {
   final ClassModel todo;
-
   ClassTaskPage({this.todo});
 
   @override
@@ -22,7 +20,7 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
   List<TaskModel> list;
   List<TaskModel> listcpy;
   TextEditingController _descController;
-  Function isEqual = const DeepCollectionEquality().equals;
+  Function isEqual = const ListEquality().equals;
 
   @override
   void initState() {
@@ -60,6 +58,14 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
           ],
         ),
       ),
+      // floatingActionButton: new Visibility(
+      //   visible: _isVisible,
+      //   child: new FloatingActionButton(
+      //     onPressed: _incrementCounter,
+      //     tooltip: 'Increment',
+      //     child: new Icon(Icons.add),
+      //   ),
+      // ),
     );
   }
 
@@ -76,8 +82,10 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
     } else if (!isEqual(list, listcpy)) {
       toUpdate = true;
     }
-    print(toUpdate);
-
+    // } else
+    if (!list[0].compareObject(listcpy[0])) toUpdate = true;
+    print(toUpdate.toString());
+    _descController.dispose();
     super.dispose();
   }
 
@@ -86,11 +94,18 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
       data: ThemeData(canvasColor: backgroundColor),
       child: ReorderableListView(
         children: list
-            .map((todo) => taskWidget(todo, () {
-                  setState(() {
-                    todo.setBool(!todo.done);
-                  });
-                }))
+            .map((todo) => TaskWidget(
+                  todo: todo,
+                  key: Key(todo.id),
+                  status: (bool toDelete) {
+                    if (toDelete)
+                      setState(() {
+                        list.remove(todo);
+                      });
+                    else
+                      setState(() {});
+                  },
+                ))
             .toList(),
         onReorder: (oldIndex, newIndex) {
           setState(() {
