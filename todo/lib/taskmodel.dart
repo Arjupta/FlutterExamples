@@ -92,6 +92,7 @@ class _TaskWidgetState extends State<TaskWidget> {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           IconButton(
             icon: Icon(Icons.drag_handle),
@@ -120,6 +121,7 @@ class _TaskWidgetState extends State<TaskWidget> {
             ),
           ),
           Visibility(
+              visible: _isWriting,
               child: IconButton(
                   icon: Icon(_isWriting ? Icons.check : Icons.delete),
                   onPressed: () {
@@ -127,9 +129,9 @@ class _TaskWidgetState extends State<TaskWidget> {
                       setState(() {
                         _isWriting = !_isWriting;
                       });
-                      widget.status(false);
+                      widget.status(toDelete: false);
                     } else {
-                      widget.status(true);
+                      widget.status(toDelete: true);
                     }
                   })),
         ],

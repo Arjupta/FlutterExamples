@@ -58,6 +58,21 @@ class _ClassTaskPageState extends State<ClassTaskPage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            list.add(
+              TaskModel(
+                id: "${list.length + 1}",
+                text: "$className ${list.length + 1}",
+                done: false,
+              ),
+            );
+          });
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.greenAccent,
+      ),
       // floatingActionButton: new Visibility(
       //   visible: _isVisible,
       //   child: new FloatingActionButton(
