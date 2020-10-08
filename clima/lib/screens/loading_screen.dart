@@ -24,7 +24,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     print(longitude);
     NetworkHelper networkHelper = NetworkHelper(
         url:
-            'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$Api_key');
+            'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$Api_key&units=metric');
     var weather_data = await networkHelper.getData();
 
     Navigator.push(
@@ -52,7 +52,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         title: Text('CLIMA'),
       ),
       body: Center(
-        child: SpinKitCubeGrid(color: Colors.white, size: 100),
+        child: SpinKitDoubleBounce(color: Colors.white, size: 100),
       ),
     );
   }
