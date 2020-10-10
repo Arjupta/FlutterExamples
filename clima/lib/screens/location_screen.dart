@@ -19,18 +19,20 @@ class _LocationScreenState extends State<LocationScreen> {
   String cityName;
 
   updateUi(weatherData) {
-    if (weatherData == null) {
-      temperature = 0;
-      weatherIcon = "Error";
-      weatherMsg = "Unable To get Weather Data";
-      cityName = "";
-      return;
-    }
-    temperature = (weatherData['main']['temp']).toInt();
-    weatherMsg = weather.getMessage(temperature);
-    int condition = weatherData['weather'][0]['id'];
-    weatherIcon = weather.getWeatherIcon(condition);
-    cityName = weatherData['name'];
+    setState(() {
+      if (weatherData == null) {
+        temperature = 0;
+        weatherIcon = "Error";
+        weatherMsg = "Unable To get Weather Data";
+        cityName = "";
+        return;
+      }
+      temperature = (weatherData['main']['temp']).toInt();
+      weatherMsg = weather.getMessage(temperature);
+      int condition = weatherData['weather'][0]['id'];
+      weatherIcon = weather.getWeatherIcon(condition);
+      cityName = weatherData['name'];
+    });
   }
 
   @override
@@ -79,7 +81,8 @@ class _LocationScreenState extends State<LocationScreen> {
                       );
                       print(typedName);
                       if (typedName != null) {
-                        var weatherData = weather.getCityWeather(typedName);
+                        var weatherData =
+                            await weather.getCityWeather(typedName);
                         updateUi(weatherData);
                       }
                     },
@@ -102,10 +105,12 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                 ],
               ),
-              Text(
-                "$weatherMsg in $cityName!",
-                textAlign: TextAlign.right,
-                style: kMessageTextStyle,
+              Expanded(
+                child: Text(
+                  "$weatherMsg in $cityName!",
+                  textAlign: TextAlign.right,
+                  style: kMessageTextStyle,
+                ),
               ),
             ],
           ),
