@@ -3,6 +3,7 @@ import 'package:side_nav/widgets.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: MyApp(),
   ));
 }
@@ -16,11 +17,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("HomeScreen"),
+      body: Container(
+        child: Stack(
+          children: [
+            Container(color: Colors.blueAccent),
+            CollapsingSideBar(),
+          ],
+        ),
       ),
-      drawer: CollapsingSideBar(),
-      body: Container(),
     );
   }
 }
