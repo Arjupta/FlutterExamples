@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
 import 'login_screen.dart';
@@ -12,23 +13,31 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
-
+  Animation animation;
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-        duration: Duration(seconds: 1), upperBound: 100, vsync: this);
+    controller =
+        AnimationController(duration: Duration(seconds: 3), vsync: this);
+    // animation = CurvedAnimation(parent: controller, curve: Curves.decelerate);
+
+    // animation = BorderRadiusTween(
+    //         begin: BorderRadius.circular(0), end: BorderRadius.circular(10))
+    //     .animate(controller);
+
+    animation = ColorTween(begin: Colors.blueGrey, end: Colors.white)
+        .animate(controller);
     controller.forward();
     controller.addListener(() {
       setState(() {});
-      print(controller.value);
+      print(animation.value);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: animation.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -44,13 +53,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     height: 60.0,
                   ),
                 ),
-                Text(
-                  '${controller.value.toInt().toString()}%',
-                  style: TextStyle(
-                    fontSize: 45.0,
+                TypewriterAnimatedTextKit(
+                  text: ['Flash Chat'],
+                  textStyle: TextStyle(
+                    fontSize: 35.0,
                     fontWeight: FontWeight.w900,
                   ),
-                ),
+                )
               ],
             ),
             SizedBox(
@@ -96,5 +105,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 }
