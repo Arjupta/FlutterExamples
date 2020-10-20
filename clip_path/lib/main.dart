@@ -26,44 +26,77 @@ class ColumnRectangle extends StatefulWidget {
 class _ColumnRectangleState extends State<ColumnRectangle> {
   @override
   Widget build(BuildContext context) {
-    CustomClipper<Rect> clipper() {}
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: ClipPath(
-            clipper: MyCustomClipper(),
-            child: Container(
-              decoration: BoxDecoration(
-                // borderRadius: BorderRadius.horizontal(
-                //     left: Radius.lerp(
-                //         Radius.circular(-10), Radius.circular(-10), 1.0),
-                //     right: Radius.circular(50)),
-                color: Colors.amber,
-              ),
+        child: Stack(
+          children: [
+            CustomPaint(
+              size: Size(
+                  double.infinity,
+                  double
+                      .infinity), //You can Replace this with your desired WIDTH and HEIGHT
+              painter: SideNavPainter(),
             ),
-          ),
+            Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.13, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 35,
+                      child: Icon(
+                        Icons.ac_unit,
+                        size: 50,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Icon(Icons.ac_unit_outlined);
+                        },
+                        itemCount: 4,
+                      ),
+                    )
+                  ],
+                ))
+          ],
         ),
       ),
     );
   }
 }
 
-class MyCustomClipper extends CustomClipper<Path> {
+class SideNavPainter extends CustomPainter {
   @override
-  Path getClip(Size size) {
-    double width = size.width;
-    double height = size.height;
-    final path = Path();
-    path.lineTo(0.0, size.height);
+  void paint(Canvas canvas, Size size) {
+    Paint paint = new Paint()
+      ..color = Color.fromARGB(255, 33, 150, 243)
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 1;
+    double barWidth = size.width * 0.13;
+    double curveWidth = size.width * 0.30;
+    double bezierWidth = size.width * 0.17;
+    double curveHeight = size.height * 0.19;
+    Path path = Path();
+    path.lineTo(0, size.height);
+    path.lineTo(barWidth, size.height);
+    path.lineTo(barWidth, size.height * 0.33);
     path.quadraticBezierTo(
-        size.width / 2, size.height - 100, size.width, size.height);
-    path.lineTo(size.width, 0.0);
+        barWidth, size.height * 0.30, bezierWidth, size.height * 0.28);
+    path.cubicTo(curveWidth, size.height * 0.25, curveWidth, size.height * 0.13,
+        bezierWidth, size.height * 0.10);
+    path.quadraticBezierTo(barWidth, size.height * 0.08, barWidth, 0);
+    path.lineTo(barWidth, 0);
     path.close();
-    return path;
+
+    canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldReclip(CustomClipper oldClipper) {
-    return false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
