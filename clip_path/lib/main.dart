@@ -1,3 +1,4 @@
+import 'package:clip_path/routing.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,6 +25,21 @@ class ColumnRectangle extends StatefulWidget {
 }
 
 class _ColumnRectangleState extends State<ColumnRectangle> {
+  List<SideNavRouteItem> screenList = [
+    SideNavRouteItem(icon: Icons.home, name: "Home"),
+    SideNavRouteItem(icon: Icons.person_outline, name: "Profile"),
+    SideNavRouteItem(icon: Icons.notifications, name: "Notification"),
+    SideNavRouteItem(icon: Icons.search, name: "Search"),
+    SideNavRouteItem(icon: Icons.star, name: "Favourite"),
+  ];
+  SideNavRouteItem selected;
+
+  @override
+  void initState() {
+    super.initState();
+    selected = screenList.first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,38 +47,79 @@ class _ColumnRectangleState extends State<ColumnRectangle> {
         child: Stack(
           children: [
             CustomPaint(
-              size: Size(
-                  double.infinity,
-                  double
-                      .infinity), //You can Replace this with your desired WIDTH and HEIGHT
+              size: Size(double.infinity, double.infinity),
               painter: SideNavPainter(),
             ),
             Container(
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.13, left: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 35,
-                      child: Icon(
-                        Icons.ac_unit,
-                        size: 50,
-                        color: Colors.black,
-                      ),
+              width: MediaQuery.of(context).size.width * 0.3,
+              margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.13, left: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 35,
+                    child: Icon(
+                      selected.icon,
+                      size: 50,
+                      color: Colors.black,
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          return Icon(Icons.ac_unit_outlined);
-                        },
-                        itemCount: 4,
-                      ),
-                    )
-                  ],
-                ))
+                  ),
+                  SizedBox(height: 40),
+                  Flexible(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        if (selected.key != screenList.elementAt(index).key)
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: NavBarTile(
+                                screen: screenList.elementAt(index),
+                                onTap: () {
+                                  selected = screenList.elementAt(index);
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          );
+                        else
+                          return SizedBox();
+                      },
+                      itemCount: screenList.length,
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class NavBarTile extends StatefulWidget {
+  final Function onTap;
+  final SideNavRouteItem screen;
+  NavBarTile({this.onTap, this.screen});
+  @override
+  _NavBarTileState createState() => _NavBarTileState();
+}
+
+class _NavBarTileState extends State<NavBarTile> {
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: Colors.white,
+      radius: 22,
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Icon(
+          widget.screen.icon,
+          size: 35,
+          color: Colors.black,
         ),
       ),
     );
@@ -72,13 +129,22 @@ class _ColumnRectangleState extends State<ColumnRectangle> {
 class SideNavPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    var rect = Offset.zero & size;
+
     Paint paint = new Paint()
-      ..color = Color.fromARGB(255, 33, 150, 243)
       ..style = PaintingStyle.fill
-      ..strokeWidth = 1;
-    double barWidth = size.width * 0.13;
+      ..shader = LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        stops: [0.3, 0.7],
+        colors: [
+          Color.fromRGBO(207, 38, 138, 1),
+          Color.fromRGBO(107, 7, 114, 1),
+        ],
+      ).createShader(rect);
+    double barWidth = size.width * 0.15;
     double curveWidth = size.width * 0.30;
-    double bezierWidth = size.width * 0.17;
+    double bezierWidth = size.width * 0.19;
     double curveHeight = size.height * 0.19;
     Path path = Path();
     path.lineTo(0, size.height);
