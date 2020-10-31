@@ -12,11 +12,11 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
-  FirebaseUser loggedInUser;
+  User loggedInUser;
   String messageText = "";
 
   void getCurrentUser() async {
-    final user = _auth.currentUser;
+    final user = await _auth.currentUser;
     if (user != null) {
       try {
         loggedInUser = user;
@@ -73,16 +73,16 @@ class _ChatScreenState extends State<ChatScreen> {
               stream: _firestore.collection('messages').snapshots(),
               builder: (context, snapshot) {
                 List<Text> widgets = [];
-                if (snapshot.hasData) {
-                  final messages = snapshot.data.docs;
-                  for (var message in messages) {
-                    print(message.data());
-                    final mesageText = message.data()['text'];
-                    final mesageSender = message.data()['sender'];
-                    final messageWidget =
-                        Text('$messageText from $mesageSender');
-                    widgets.add(messageWidget);
-                  }
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final messages = snapshot.data.docs;
+                for (var message in messages) {
+                  print(message.data());
+                  final messageText = message.data()['text'];
+                  final mesageSender = message.data()['sender'];
+                  final messageWidget = Text('$messageText from $mesageSender');
+                  widgets.add(messageWidget);
                 }
                 return Column(children: widgets);
               },
