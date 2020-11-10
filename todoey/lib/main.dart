@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'screens/TasksScreen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    home: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: TaskScreen(),
-    );
+    return TaskScreen();
   }
 }
