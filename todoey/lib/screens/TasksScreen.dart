@@ -57,6 +57,7 @@ class _TaskScreenState extends State<TaskScreen> {
         onPressed: () {
           showModalBottomSheet(
             context: context,
+            isScrollControlled: true,
             builder: (context) => buildBottomSheet(context),
           );
         },
