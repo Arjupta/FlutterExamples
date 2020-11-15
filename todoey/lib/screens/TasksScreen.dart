@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todoey/constants.dart';
+import 'package:todoey/models/task.dart';
 import 'package:todoey/widgets/bottom_modal_sheet.dart';
 import 'package:todoey/widgets/task_list.dart';
 
@@ -9,7 +10,18 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  int task_count = 0;
+  List<Task> tasks = [
+    Task(isDone: false, name: "Buy Milk"),
+    Task(isDone: false, name: "Buy Eggs"),
+    Task(isDone: false, name: "Buy Bread"),
+  ];
+  int taskCount = 0;
+  @override
+  void initState() {
+    super.initState();
+    taskCount = Task.incompletedTasks(tasks);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +44,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 Text('Todoey', style: kHeadTextStyle),
                 SizedBox(height: 10),
                 Text(
-                  '$task_count Tasks',
+                  '${tasks.length} Tasks',
                   style: kHeadTextStyle.copyWith(fontSize: 15),
                 ),
               ],
@@ -48,7 +60,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   topRight: Radius.circular(30),
                 ),
               ),
-              child: TaskList(),
+              child: TaskList(tasks: tasks),
             ),
           )
         ],
@@ -58,7 +70,12 @@ class _TaskScreenState extends State<TaskScreen> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            builder: (context) => buildBottomSheet(context),
+            builder: (context) => buildBottomSheet(context, (String newTask) {
+              setState(() {
+                tasks.add(Task(name: newTask));
+                taskCount = Task.incompletedTasks(tasks);
+              });
+            }),
           );
         },
         backgroundColor: Colors.lightBlueAccent,

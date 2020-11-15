@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:todoey/constants.dart';
 
-Widget buildBottomSheet(BuildContext context) {
+Widget buildBottomSheet(BuildContext context, Function addTask) {
   return SingleChildScrollView(
-    child: BottomSheet(),
+    child: BottomSheet(
+      addTask: (String newTask) {
+        addTask(newTask);
+      },
+    ),
     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
   );
 }
 
 class BottomSheet extends StatelessWidget {
+  BottomSheet({this.addTask});
+  final Function addTask;
+  final TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,6 +38,7 @@ class BottomSheet extends StatelessWidget {
               style: kHeadTextStyle.copyWith(color: Colors.lightBlueAccent),
             ),
             TextField(
+              controller: controller,
               autofocus: true,
               textAlign: TextAlign.center,
             ),
@@ -38,7 +46,10 @@ class BottomSheet extends StatelessWidget {
             MaterialButton(
               color: Colors.lightBlue,
               child: Text("Add", style: TextStyle(color: Colors.white)),
-              onPressed: () {},
+              onPressed: () {
+                addTask(controller.text);
+                Navigator.of(context).pop();
+              },
             ),
           ],
         ),
