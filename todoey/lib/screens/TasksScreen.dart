@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todoey/constants.dart';
 import 'package:todoey/models/task.dart';
+import 'package:todoey/models/task_data.dart';
 import 'package:todoey/widgets/bottom_modal_sheet.dart';
 import 'package:todoey/widgets/task_list.dart';
 
@@ -10,16 +12,9 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  List<Task> tasks = [
-    Task(isDone: false, name: "Buy Milk"),
-    Task(isDone: false, name: "Buy Eggs"),
-    Task(isDone: false, name: "Buy Bread"),
-  ];
-  int taskCount = 0;
   @override
   void initState() {
     super.initState();
-    taskCount = Task.incompletedTasks(tasks);
   }
 
   @override
@@ -44,7 +39,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 Text('Todoey', style: kHeadTextStyle),
                 SizedBox(height: 10),
                 Text(
-                  '${tasks.length} Tasks',
+                  '${Provider.of<TaskData>(context).taskCount} Tasks',
                   style: kHeadTextStyle.copyWith(fontSize: 15),
                 ),
               ],
@@ -60,7 +55,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   topRight: Radius.circular(30),
                 ),
               ),
-              child: TaskList(tasks: tasks),
+              child: TaskList(),
             ),
           )
         ],
@@ -72,8 +67,7 @@ class _TaskScreenState extends State<TaskScreen> {
             isScrollControlled: true,
             builder: (context) => buildBottomSheet(context, (String newTask) {
               setState(() {
-                tasks.add(Task(name: newTask));
-                taskCount = Task.incompletedTasks(tasks);
+                Provider.of<TaskData>(context).tasks.add(Task(name: newTask));
               });
             }),
           );
