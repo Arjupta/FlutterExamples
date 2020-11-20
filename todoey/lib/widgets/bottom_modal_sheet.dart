@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todoey/constants.dart';
+import 'package:todoey/models/task_data.dart';
 
-Widget buildBottomSheet(BuildContext context, Function addTask) {
+Widget buildBottomSheet(BuildContext context) {
   return SingleChildScrollView(
-    child: BottomSheet(
-      addTask: (String newTask) {
-        addTask(newTask);
-      },
-    ),
+    child: BottomSheet(),
     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
   );
 }
 
 class BottomSheet extends StatelessWidget {
-  BottomSheet({this.addTask});
-  final Function addTask;
   final TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -47,7 +43,8 @@ class BottomSheet extends StatelessWidget {
               color: Colors.lightBlue,
               child: Text("Add", style: TextStyle(color: Colors.white)),
               onPressed: () {
-                addTask(controller.text);
+                Provider.of<TaskData>(context, listen: false)
+                    .addTask(controller.text);
                 Navigator.of(context).pop();
               },
             ),

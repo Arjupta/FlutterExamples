@@ -39,7 +39,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 Text('Todoey', style: kHeadTextStyle),
                 SizedBox(height: 10),
                 Text(
-                  '${Provider.of<TaskData>(context).taskCount} Tasks',
+                  '${Provider.of<TaskData>(context).undoneTasks()} Tasks',
                   style: kHeadTextStyle.copyWith(fontSize: 15),
                 ),
               ],
@@ -65,11 +65,7 @@ class _TaskScreenState extends State<TaskScreen> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            builder: (context) => buildBottomSheet(context, (String newTask) {
-              setState(() {
-                Provider.of<TaskData>(context).tasks.add(Task(name: newTask));
-              });
-            }),
+            builder: (context) => buildBottomSheet(context),
           );
         },
         backgroundColor: Colors.lightBlueAccent,
